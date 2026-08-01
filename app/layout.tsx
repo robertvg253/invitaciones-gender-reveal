@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Great_Vibes, Inter } from "next/font/google";
 import "./globals.css";
 
@@ -20,10 +20,10 @@ const greatVibes = Great_Vibes({
 
 export const metadata: Metadata = {
   title: "Revelación de Género",
-  description: "Invitación para revelación de género",
+  description: "Acompáñanos a nuestra revelación de género",
 };
 
-export const viewport = {
+export const viewport: Viewport = {
   themeColor: "#F9F8F6",
 };
 
@@ -34,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="es"
       className={`${inter.variable} ${playfair.variable} ${greatVibes.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-[#F9F8F6]">{children}</body>

@@ -23,13 +23,13 @@ export default async function InvitationPage({
 
   return (
     <main className="min-h-screen bg-[#F9F8F6] text-gray-800 flex flex-col items-center py-16 px-6 sm:px-12 relative overflow-hidden">
-      
+
       {/* Boy OR Girl Section */}
       <FadeInSection>
         <div className="flex items-center gap-3 mb-6">
-          <span className="font-great-vibes text-[5rem] sm:text-[6rem] text-gray-800 leading-none -mr-2">boy</span>
-          <span className="font-playfair text-[9px] tracking-[0.2em] text-gray-800 self-center uppercase pt-2">OR</span>
-          <span className="font-great-vibes text-[5rem] sm:text-[6rem] text-gray-800 leading-none -ml-1">girl</span>
+          <span className="font-great-vibes text-[5rem] sm:text-[6rem] text-[#706458] leading-none -mr-2">boy</span>
+          <span className="font-playfair text-[9px] tracking-[0.2em] text-[#706458] self-center uppercase pt-2">OR</span>
+          <span className="font-great-vibes text-[5rem] sm:text-[6rem] text-[#706458] leading-none -ml-1">girl</span>
         </div>
       </FadeInSection>
 
@@ -47,7 +47,7 @@ export default async function InvitationPage({
           <p className="font-playfair text-[9px] sm:text-[10px] tracking-[0.15em] text-gray-800 mb-6 uppercase">
             ACOMPÁÑANOS A LA REVELACIÓN DE GÉNERO<br className="mb-2" />HONORANDO A
           </p>
-          <h1 className="font-playfair text-[1.4rem] sm:text-[1.6rem] tracking-[0.15em] text-gray-800 uppercase font-medium">
+          <h1 className="font-playfair text-[1.4rem] sm:text-[1.6rem] tracking-[0.15em] text-[#706458] uppercase font-medium">
             EMILIA & ROBERT
           </h1>
         </div>
@@ -65,7 +65,7 @@ export default async function InvitationPage({
                 SÁBADO
               </span>
             </div>
-            <span className="font-playfair text-6xl sm:text-7xl font-normal text-gray-800 leading-none px-1 -mt-2">
+            <span className="font-playfair text-6xl sm:text-7xl font-normal text-[#706458] leading-none px-1 -mt-2">
               08
             </span>
             <div className="flex-1 flex justify-center border-y border-[#C5B39A] py-[10px]">
@@ -89,9 +89,9 @@ export default async function InvitationPage({
           <p className="text-gray-800 text-[10px] tracking-[0.15em] uppercase mb-5">
             URB NUEVA SEGOVIA
           </p>
-          <a 
-            href="https://maps.app.goo.gl/i4nSbwDEumFjER7NA" 
-            target="_blank" 
+          <a
+            href="https://maps.app.goo.gl/i4nSbwDEumFjER7NA"
+            target="_blank"
             rel="noopener noreferrer"
             className="text-[#D3AD7A] text-[9px] tracking-[0.2em] uppercase transition-colors hover:text-gray-600"
           >
@@ -102,7 +102,7 @@ export default async function InvitationPage({
 
       {/* Dynamic Data / Invitation Details */}
       <FadeInSection delay={0.5}>
-        <div 
+        <div
           className="w-full max-w-md border border-[#C5B39A]/30 p-8 rounded-2xl text-center shadow-sm mb-6 flex flex-col items-center relative overflow-hidden"
           style={{
             backgroundImage: 'url(/10366743.jpg)',
@@ -114,7 +114,7 @@ export default async function InvitationPage({
             <h2 className="font-great-vibes text-4xl mb-4 text-gray-900">
               {invitado.nombre_mostrar}
             </h2>
-            
+
             <div className="font-playfair text-sm text-gray-800 font-medium tracking-wider">
               {invitado.tipo_invitacion === 'A' && (
                 <p>Válido para {invitado.num_invitados} personas</p>
@@ -130,9 +130,9 @@ export default async function InvitationPage({
 
       {/* RSVP Button */}
       <FadeInSection delay={0.6}>
-        <BotonConfirmar 
-          invitadoId={invitado.id} 
-          estadoInicial={invitado.estado_confirmacion} 
+        <BotonConfirmar
+          invitadoId={invitado.id}
+          estadoInicial={invitado.estado_confirmacion}
         />
       </FadeInSection>
 
