@@ -5,6 +5,7 @@ import FadeInSection from '@/components/FadeInSection';
 import { Heart } from 'lucide-react';
 import DinamicaRegalos from '@/components/DinamicaRegalos';
 import DressCodePalette from '@/components/DressCodePalette';
+import Image from 'next/image';
 
 export default async function InvitationPage({
   params,
@@ -37,9 +38,26 @@ export default async function InvitationPage({
 
       {/* Heart and Vertical Line */}
       <FadeInSection delay={0.1}>
-        <div className="flex flex-col items-center mb-10">
+        <div className="flex flex-col items-center">
           <Heart className="w-3.5 h-3.5 text-[#C5B39A] fill-[#C5B39A] mb-3 animate-heartbeat origin-center" />
-          <div className="w-[1px] h-28 bg-[#C5B39A] opacity-60"></div>
+          <div className="w-[1px] h-16 sm:h-20 bg-[#C5B39A] opacity-60"></div>
+        </div>
+      </FadeInSection>
+
+      {/* Ultrasound Image */}
+      <FadeInSection delay={0.15}>
+        <div className="flex justify-center my-6 md:my-8 w-full p-4 md:p-6">
+          <Image
+            src="/IMG_7306.PNG"
+            alt="Ecografía"
+            width={600}
+            height={400}
+            className="w-full max-w-sm md:max-w-lg h-60 md:h-80 object-cover mix-blend-luminosity opacity-90"
+            style={{
+              WebkitMaskImage: 'radial-gradient(ellipse at center, black 20%, transparent 60%)',
+              maskImage: 'radial-gradient(ellipse at center, black 20%, transparent 60%)',
+            }}
+          />
         </div>
       </FadeInSection>
 

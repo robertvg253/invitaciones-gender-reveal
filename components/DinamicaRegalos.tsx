@@ -62,12 +62,12 @@ export default function DinamicaRegalos() {
                 <path d="M14 9h2" />
               </svg>
               <h3 className="font-great-vibes text-3xl md:text-4xl text-[#706458] mb-2">Team Niña</h3>
-              <p className="font-playfair text-[9px] md:text-[11px] text-gray-600">
+              <p className="font-playfair text-base md:text-lg text-gray-600">
                 (Trae pañales)
               </p>
               <button
                 onClick={() => openModal('nina')}
-                className="mt-auto pt-3 font-playfair text-[8px] md:text-[9px] tracking-[0.2em] text-[#C5B39A] uppercase border-b border-[#C5B39A] pb-[2px] transition-colors hover:text-gray-600 hover:border-gray-600 focus:outline-none"
+                className="mt-auto pt-3 font-playfair font-semibold text-[9px] md:text-[10px] tracking-[0.2em] text-[#C5B39A] uppercase border-b border-[#C5B39A] pb-[2px] transition-colors hover:text-gray-600 hover:border-gray-600 focus:outline-none"
               >
                 VER MARCAS SUGERIDAS
               </button>
@@ -88,12 +88,12 @@ export default function DinamicaRegalos() {
                 <circle cx="12" cy="14" r="2" />
               </svg>
               <h3 className="font-great-vibes text-3xl md:text-4xl text-[#706458] mb-2">Team Niño</h3>
-              <p className="font-playfair text-[9px] md:text-[11px] text-gray-600">
-                (Trae toallitas húmedas<br/>+ crema para pañalitis)
+              <p className="font-playfair text-base md:text-lg text-gray-600">
+                (Trae toallitas húmedas<br />+ crema para pañalitis)
               </p>
               <button
                 onClick={() => openModal('nino')}
-                className="mt-auto pt-3 font-playfair text-[8px] md:text-[9px] tracking-[0.2em] text-[#C5B39A] uppercase border-b border-[#C5B39A] pb-[2px] transition-colors hover:text-gray-600 hover:border-gray-600 focus:outline-none"
+                className="mt-auto pt-3 font-playfair font-semibold text-[9px] md:text-[10px] tracking-[0.2em] text-[#C5B39A] uppercase border-b border-[#C5B39A] pb-[2px] transition-colors hover:text-gray-600 hover:border-gray-600 focus:outline-none"
               >
                 VER MARCAS SUGERIDAS
               </button>
@@ -103,11 +103,11 @@ export default function DinamicaRegalos() {
       </FadeInSection>
 
       {/* Render the modal */}
-      <ReferenciaModal 
-        isOpen={modalOpen} 
-        onClose={closeModal} 
-        type={modalType} 
-        data={modalType === 'nina' ? marcasNina : modalType === 'nino' ? marcasNino : []} 
+      <ReferenciaModal
+        isOpen={modalOpen}
+        onClose={closeModal}
+        type={modalType}
+        data={modalType === 'nina' ? marcasNina : modalType === 'nino' ? marcasNino : []}
       />
     </>
   );
