@@ -21,6 +21,9 @@ const greatVibes = Great_Vibes({
 export const metadata: Metadata = {
   title: "Revelación de Género",
   description: "Acompáñanos a nuestra revelación de género",
+  icons: {
+    icon: "/favicon-bear.PNG",
+  },
 };
 
 export const viewport: Viewport = {

@@ -1,9 +1,9 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 
 export default function DressCodePalette() {
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: { 
       opacity: 1, 
@@ -14,7 +14,7 @@ export default function DressCodePalette() {
     }
   };
 
-  const circleVariants = {
+  const circleVariants: Variants = {
     hidden: { opacity: 0, x: 50 },
     visible: { 
       opacity: 1, 
