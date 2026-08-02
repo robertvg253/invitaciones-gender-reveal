@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import BotonConfirmar from '@/components/BotonConfirmar';
 import FadeInSection from '@/components/FadeInSection';
 import { Heart } from 'lucide-react';
+import DinamicaRegalos from '@/components/DinamicaRegalos';
+import DressCodePalette from '@/components/DressCodePalette';
 
 export default async function InvitationPage({
   params,
@@ -27,16 +29,16 @@ export default async function InvitationPage({
       {/* Boy OR Girl Section */}
       <FadeInSection>
         <div className="flex items-center gap-3 mb-6">
-          <span className="font-great-vibes text-[5rem] sm:text-[6rem] text-[#706458] leading-none -mr-2">boy</span>
-          <span className="font-playfair text-[9px] tracking-[0.2em] text-[#706458] self-center uppercase pt-2">OR</span>
-          <span className="font-great-vibes text-[5rem] sm:text-[6rem] text-[#706458] leading-none -ml-1">girl</span>
+          <span className="font-great-vibes text-[6.5rem] text-[#706458] leading-none -mr-2">boy</span>
+          <span className="font-playfair text-[11px] tracking-[0.2em] text-[#706458] self-center uppercase pt-2 ml-[10px]">OR</span>
+          <span className="font-great-vibes text-[6.5rem] text-[#706458] leading-none -ml-1">girl</span>
         </div>
       </FadeInSection>
 
       {/* Heart and Vertical Line */}
       <FadeInSection delay={0.1}>
         <div className="flex flex-col items-center mb-10">
-          <Heart className="w-3.5 h-3.5 text-[#C5B39A] fill-[#C5B39A] mb-3" />
+          <Heart className="w-3.5 h-3.5 text-[#C5B39A] fill-[#C5B39A] mb-3 animate-heartbeat origin-center" />
           <div className="w-[1px] h-28 bg-[#C5B39A] opacity-60"></div>
         </div>
       </FadeInSection>
@@ -70,7 +72,7 @@ export default async function InvitationPage({
             </span>
             <div className="flex-1 flex justify-center border-y border-[#C5B39A] py-[10px]">
               <span className="font-playfair text-[10px] tracking-[0.25em] uppercase text-gray-800">
-                3 PM
+                3:30 PM
               </span>
             </div>
           </div>
@@ -93,12 +95,33 @@ export default async function InvitationPage({
             href="https://maps.app.goo.gl/i4nSbwDEumFjER7NA"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#D3AD7A] text-[9px] tracking-[0.2em] uppercase transition-colors hover:text-gray-600"
+            className="text-[#D3AD7A] text-[9px] tracking-[0.2em] uppercase transition-colors hover:text-gray-600 border-b border-[#D3AD7A] pb-[1px]"
           >
             Ver en Google Maps
           </a>
         </div>
       </FadeInSection>
+
+      {/* Dress Code Section */}
+      <FadeInSection delay={0.25}>
+        <div className="flex flex-col items-center text-center mb-16 md:mb-24">
+          <div className="w-1 h-1 bg-[#C5B39A] rounded-full mb-6"></div>
+          <p className="font-playfair text-[10px] md:text-[12px] tracking-[0.2em] text-gray-800 uppercase">
+            DRESS CODE
+          </p>
+          <p className="font-playfair text-xl md:text-2xl tracking-widest text-gray-800 uppercase mt-2">
+            CASUAL
+          </p>
+          <p className="font-playfair text-[11px] md:text-[13px] text-gray-600 italic mb-6 mt-1">
+            Te sugerimos inspirarte en la siguiente paleta de colores
+          </p>
+
+          <DressCodePalette />
+        </div>
+      </FadeInSection>
+
+      {/* Gift Dynamics Section (Extracted to Client Component) */}
+      <DinamicaRegalos />
 
       {/* Dynamic Data / Invitation Details */}
       <FadeInSection delay={0.5}>
