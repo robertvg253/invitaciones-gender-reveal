@@ -15,9 +15,10 @@ const marcasNina: Referencia[] = [
 const marcasNino: Referencia[] = [
   { id: 1, marca: 'Crema Antipanalitis Overskin 13% x 50 gr', img: '/crema-overskin13.PNG' },
   { id: 2, marca: 'Crema Overskin Antipanalitis 40% 50Gr', img: '/crema-overskin40.PNG' },
-  { id: 3, marca: 'Toallas Humedas Uppy Sensitive 60Und', img: '/toallas-uppy.PNG' },
-  { id: 4, marca: 'Toallas Húmedas Farmatodo Bebé Premium 99% Agua x 72 und', img: '/toallas-farmatodo.PNG' },
-  { id: 5, marca: 'Toallas Humedas Uppy Shea Butter 72Und', img: '/toallas-uppy-sheabutter.PNG' }
+  { id: 3, marca: 'Crema Cero Antipañalitis con Aloe Vera x 30 gr', img: '/crema-cero.PNG' },
+  { id: 4, marca: 'Toallas Humedas Uppy Sensitive 60Und', img: '/toallas-uppy.PNG' },
+  { id: 5, marca: 'Toallas Húmedas Farmatodo Bebé Premium 99% Agua x 72 und', img: '/toallas-farmatodo.PNG' },
+  { id: 6, marca: 'Toallas Humedas Uppy Shea Butter 72Und', img: '/toallas-uppy-sheabutter.PNG' }
 ];
 
 export default function DinamicaRegalos() {
