@@ -63,14 +63,14 @@ export default function DinamicaRegalos() {
                 <path d="M14 9h2" />
               </svg>
               <h3 className="font-great-vibes text-3xl md:text-4xl text-[#706458] mb-2">Team Niña</h3>
-              <p className="font-playfair text-base md:text-lg text-gray-600">
+              <p className="font-playfair text-[0.9rem] text-gray-600 mb-[10px]">
                 (Trae pañales)
               </p>
               <button
                 onClick={() => openModal('nina')}
-                className="mt-auto pt-3 font-playfair font-semibold text-[9px] md:text-[10px] tracking-[0.2em] text-[#C5B39A] uppercase border-b border-[#C5B39A] pb-[2px] transition-colors hover:text-gray-600 hover:border-gray-600 focus:outline-none"
+                className="mt-auto w-full px-2 py-2 rounded-full border border-[#C5B39A] text-[#C5B39A] font-playfair tracking-widest uppercase text-[9px] md:text-[10px] hover:bg-[#C5B39A] hover:text-white transition-all duration-300 focus:outline-none"
               >
-                VER MARCAS SUGERIDAS
+                Ver sugerencias
               </button>
             </div>
 
@@ -89,14 +89,14 @@ export default function DinamicaRegalos() {
                 <circle cx="12" cy="14" r="2" />
               </svg>
               <h3 className="font-great-vibes text-3xl md:text-4xl text-[#706458] mb-2">Team Niño</h3>
-              <p className="font-playfair text-base md:text-lg text-gray-600">
+              <p className="font-playfair text-[0.9rem] text-gray-600 mb-[10px]">
                 (Trae toallitas húmedas<br />+ crema para pañalitis)
               </p>
               <button
                 onClick={() => openModal('nino')}
-                className="mt-auto pt-3 font-playfair font-semibold text-[9px] md:text-[10px] tracking-[0.2em] text-[#C5B39A] uppercase border-b border-[#C5B39A] pb-[2px] transition-colors hover:text-gray-600 hover:border-gray-600 focus:outline-none"
+                className="mt-auto w-full px-2 py-2 rounded-full border border-[#C5B39A] text-[#C5B39A] font-playfair tracking-widest uppercase text-[9px] md:text-[10px] hover:bg-[#C5B39A] hover:text-white transition-all duration-300 focus:outline-none"
               >
-                VER MARCAS SUGERIDAS
+                Ver sugerencias
               </button>
             </div>
           </div>
