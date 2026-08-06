@@ -65,6 +65,20 @@ function getMostFrequent(arr: any[]) {
   return mostFrequent;
 }
 
+const colorOjosMap: Record<string, string> = {
+  "#3B2F2F": "Oscuro",
+  "#8B5A2B": "Claro",
+  "#CD853F": "Ámbar",
+  "#556B2F": "Verde"
+};
+
+const colorCabelloMap: Record<string, string> = {
+  "#0F0F0F": "Negro",
+  "#3E2723": "Castaño",
+  "#5D4037": "Claro",
+  "#D4AF37": "Rubio"
+};
+
 export default function StatisticsView() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -296,14 +310,20 @@ export default function StatisticsView() {
                 className={`w-24 h-24 rounded-full shadow-lg border-[6px] border-white transition-all duration-1000 delay-300 ${showProgress ? 'scale-100 opacity-100 rotate-0' : 'scale-50 opacity-0 -rotate-45'}`}
                 style={{ backgroundColor: stats.topOjos || '#ccc' }}
               />
-              <span className="font-sans text-sm font-semibold text-gray-400 uppercase tracking-widest">Ojos</span>
+              <div className="flex flex-col items-center gap-1">
+                <span className="font-sans text-sm font-semibold text-gray-400 uppercase tracking-widest">Ojos</span>
+                {stats.topOjos && <span className="text-[10px] font-sans text-gray-400 opacity-70">{colorOjosMap[stats.topOjos] || ""}</span>}
+              </div>
             </div>
             <div className="flex flex-col items-center gap-4">
               <div 
                 className={`w-24 h-24 rounded-full shadow-lg border-[6px] border-white transition-all duration-1000 delay-500 ${showProgress ? 'scale-100 opacity-100 rotate-0' : 'scale-50 opacity-0 rotate-45'}`}
                 style={{ backgroundColor: stats.topCabello || '#ccc' }}
               />
-              <span className="font-sans text-sm font-semibold text-gray-400 uppercase tracking-widest">Cabello</span>
+              <div className="flex flex-col items-center gap-1">
+                <span className="font-sans text-sm font-semibold text-gray-400 uppercase tracking-widest">Cabello</span>
+                {stats.topCabello && <span className="text-[10px] font-sans text-gray-400 opacity-70">{colorCabelloMap[stats.topCabello] || ""}</span>}
+              </div>
             </div>
           </div>
         </motion.div>

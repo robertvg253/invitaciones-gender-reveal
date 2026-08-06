@@ -126,7 +126,10 @@ export default function LoginForm({ onLoginSuccess }: LoginFormProps) {
             </label>
             <input
               id="otp"
+              name="otp"
               type="text"
+              inputMode="numeric"
+              autoComplete="one-time-code"
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
               className="w-full bg-transparent border-b border-[#C5B39A]/30 py-2 px-1 text-gray-800 text-center text-3xl tracking-[0.5em] focus:outline-none focus:border-[#C5B39A] transition-colors font-sans placeholder-gray-200"
