@@ -158,7 +158,7 @@ export default async function InvitationPage({
 
             <div className="font-playfair text-sm text-gray-800 font-medium tracking-wider">
               {invitado.tipo_invitacion === 'A' && (
-                <p>Válido para {invitado.num_invitados} persona</p>
+                <p>Válido para {invitado.num_invitados} {invitado.num_invitados === 1 ? 'persona' : 'personas'}</p>
               )}
 
               {invitado.tipo_invitacion === 'B' && (
