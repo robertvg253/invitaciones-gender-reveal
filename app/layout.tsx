@@ -19,10 +19,10 @@ const greatVibes = Great_Vibes({
 });
 
 export const metadata: Metadata = {
-  title: "Revelación de Género",
-  description: "Acompáñanos a nuestra revelación de género",
+  title: "Baby Shower de Avril",
+  description: "Emilia & Robert te invitan a celebrar el baby shower de nuestra bebé",
   icons: {
-    icon: "/favicon-bear.PNG",
+    icon: "/lazos-dresscode/great - 10.png",
   },
 };
 
