@@ -146,7 +146,7 @@ export default function InvitationDetails({ guestData }: InvitationDetailsProps)
         {/* Sección de Fecha EXACTA al diseño */}
         <MotionSection className="mt-16 relative z-10" delay={1.2}>
           <p className="font-playfair text-xs tracking-widest uppercase text-gray-500 mb-6">
-            NOV
+            OCT
           </p>
 
           <div className="flex items-center justify-center w-full max-w-[280px]">
