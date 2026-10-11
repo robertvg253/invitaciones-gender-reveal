@@ -18,40 +18,11 @@ const greatVibes = Great_Vibes({
   subsets: ["latin"],
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined));
-
 export const metadata: Metadata = {
-  metadataBase: siteUrl ? new URL(siteUrl) : undefined,
   title: "Baby Shower de Avril",
-  description: "Emilia & Robert te invitan a celebrar el baby shower de nuestra bebé",
+  description: "Emilia & Robert te invitan a celebrar el baby shower de su bebé,
   icons: {
-    icon: "/lazos-dresscode/great - 11.png?v=2",
-    shortcut: "/lazos-dresscode/great - 11.png?v=2",
-    apple: "/lazos-dresscode/great - 11.png?v=2",
-  },
-  openGraph: {
-    title: "Baby Shower de Avril",
-    description: "Emilia & Robert te invitan a celebrar el baby shower de nuestra bebé",
-    url: "/",
-    siteName: "Baby Shower de Avril",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Baby Shower de Avril",
-      },
-    ],
-    locale: "es_ES",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Baby Shower de Avril",
-    description: "Emilia & Robert te invitan a celebrar el baby shower de nuestra bebé",
-    images: ["/og-image.png"],
+    icon: "/lazos-dresscode/great - 11.png",
   },
 };
 
