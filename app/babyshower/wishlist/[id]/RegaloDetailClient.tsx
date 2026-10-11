@@ -42,9 +42,10 @@ export default function RegaloDetailClient({ initialRegalo }: Props) {
       {/* Botón Flotante de Retorno */}
       <button
         onClick={() => router.back()}
-        className="fixed top-6 left-4 z-50 flex items-center justify-center w-10 h-10 rounded-full bg-white/70 backdrop-blur-md shadow-sm text-gray-700 hover:bg-white transition-colors"
+        className="fixed top-6 left-4 z-50 flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/80 backdrop-blur-md shadow-sm text-gray-700 hover:bg-white hover:text-gray-900 transition-colors font-playfair text-xs tracking-wider uppercase"
       >
-        <ArrowLeft className="w-5 h-5" />
+        <ArrowLeft className="w-4 h-4" />
+        <span>Volver</span>
       </button>
 
       {/* Imagen Hero Edge-to-Edge */}
@@ -104,12 +105,20 @@ export default function RegaloDetailClient({ initialRegalo }: Props) {
           {regalo.es_reservable && (
             <>
               {regalo.reservado ? (
-                <button 
-                  disabled
-                  className="w-full py-4 rounded-full bg-[#b56a7f] text-white font-playfair text-xs tracking-wider uppercase cursor-not-allowed opacity-80"
-                >
-                  RESERVADO ✓
-                </button>
+                <div className="flex flex-col gap-3 w-full">
+                  <button 
+                    disabled
+                    className="w-full py-4 rounded-full bg-[#b56a7f] text-white font-playfair text-xs tracking-wider uppercase cursor-not-allowed opacity-80"
+                  >
+                    RESERVADO ✓
+                  </button>
+                  <button
+                    onClick={() => router.back()}
+                    className="w-full py-4 rounded-full bg-transparent border border-[#b56a7f]/40 text-[#b56a7f] font-playfair text-xs tracking-wider uppercase hover:bg-[#FFE6E7]/30 transition-colors"
+                  >
+                    ← Volver a la Lista
+                  </button>
+                </div>
               ) : (
                 <motion.button 
                   whileTap={{ scale: 0.95 }}

@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { Gift } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
@@ -22,11 +22,109 @@ export interface Regalo {
   reservado: boolean;
 }
 
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 50 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
+
 export default function WishlistClient({ initialRegalos }: { initialRegalos: Regalo[] }) {
   const [regalos, setRegalos] = useState<Regalo[]>(initialRegalos);
   const [selectedRegalo, setSelectedRegalo] = useState<Regalo | null>(null);
   const [isReserving, setIsReserving] = useState(false);
+  const [isFirstLoad] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return !sessionStorage.getItem('wishlist_loaded');
+    }
+    return true; // Por defecto true en el servidor
+  });
+
+  // Usaremos isFirstLoad para controlar el skeleton
+  const [isLoading, setIsLoading] = useState(isFirstLoad);
   const router = useRouter();
+
+  // Pre-carga real de imágenes enlazada directamente al tiempo de vida del Skeleton
+  useEffect(() => {
+    if (!isFirstLoad) {
+      setIsLoading(false);
+      return;
+    }
+
+    let isMounted = true;
+    const urlsToLoad = initialRegalos
+      .map((r) => r.imagen_url)
+      .filter((url): url is string => Boolean(url));
+
+    // Promesas de precarga para cada imagen
+    const imagesPromise = Promise.all(
+      urlsToLoad.map((url) => {
+        return new Promise<void>((resolve) => {
+          const img = new window.Image();
+          img.src = url;
+          if (img.complete) {
+            resolve();
+          } else {
+            img.onload = () => resolve();
+            img.onerror = () => resolve();
+          }
+        });
+      })
+    );
+
+    // Mínimo de 600ms para evitar parpadeo si cargan en milisegundos
+    const minDelayPromise = new Promise((resolve) => setTimeout(resolve, 600));
+
+    // Timeout de seguridad máximo (3500ms) para que nunca se quede trabado en conexiones muy lentas
+    const safetyTimer = setTimeout(() => {
+      if (isMounted) {
+        setIsLoading(false);
+        sessionStorage.setItem('wishlist_loaded', 'true');
+      }
+    }, 3500);
+
+    // Solo cuando TODAS las imágenes estén descargadas en memoria se desactiva el Skeleton
+    Promise.all([imagesPromise, minDelayPromise]).then(() => {
+      if (isMounted) {
+        clearTimeout(safetyTimer);
+        setIsLoading(false);
+        sessionStorage.setItem('wishlist_loaded', 'true');
+      }
+    });
+
+    return () => {
+      isMounted = false;
+      clearTimeout(safetyTimer);
+    };
+  }, [isFirstLoad, initialRegalos]);
+
+  // Suscripción Realtime a Supabase para mantener la cuadrícula actualizada sin re-fetch ni rotura de scroll
+  useEffect(() => {
+    const channel = supabase
+      .channel('realtime-regalos')
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'regalos_babyshower' },
+        (payload) => {
+          setRegalos((prevRegalos: any) =>
+            prevRegalos.map((regalo: any) =>
+              regalo.id === payload.new.id ? { ...regalo, ...payload.new } : regalo
+            )
+          );
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   const handleReserve = async () => {
     if (!selectedRegalo) return;
@@ -77,6 +175,16 @@ export default function WishlistClient({ initialRegalos }: { initialRegalos: Reg
 
   const masonryColumns = getMasonryColumns();
 
+  const getSkeletonColumns = () => {
+    const cols = Array.from({ length: columnsCount }, () => [] as number[]);
+    Array.from({ length: 8 }).forEach((_, i) => {
+      cols[i % columnsCount].push(i);
+    });
+    return cols;
+  };
+
+  const skeletonColumns = getSkeletonColumns();
+
   // Encontrar los primeros elementos para apuntar en el Tour
   const firstReservableId = regalos.find(r => r.es_reservable && !r.reservado)?.id;
   const firstInfiniteId = regalos.find(r => !r.es_reservable)?.id;
@@ -119,84 +227,115 @@ export default function WishlistClient({ initialRegalos }: { initialRegalos: Reg
         </p>
       </div>
 
-      {/* Layout Masonry de Regalos (Ordenado Izquierda-Derecha) */}
-      <div className="flex w-full gap-3 md:gap-4 items-start">
-        {masonryColumns.map((col, colIndex) => (
-          <div key={colIndex} className="flex flex-col gap-3 md:gap-4 flex-1">
-            {col.map((regalo) => (
-              <div 
-                key={regalo.id} 
-                id={regalo.id === firstReservableId ? 'tour-reservable-item' : regalo.id === firstInfiniteId ? 'tour-infinite-item' : undefined}
-                className={`w-full bg-white border border-pink-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col ${
-                  regalo.es_reservable && regalo.reservado ? 'opacity-60 grayscale-[0.5]' : ''
-                }`}
-              >
-                {/* Imagen */}
-                {regalo.imagen_url ? (
-                  <div className="w-full h-auto overflow-hidden rounded-t-2xl">
-                    <img 
-                      src={regalo.imagen_url} 
-                      alt={regalo.nombre} 
-                      className="w-full h-auto object-contain block"
-                      loading="lazy"
-                    />
-                  </div>
-                ) : (
-                  <div className="bg-pink-50/50 h-40 flex items-center justify-center rounded-t-2xl">
-                    <Gift className="w-12 h-12 text-gray-300" strokeWidth={1} />
-                  </div>
-                )}
-
-                {/* Contenido de la Tarjeta */}
-                <div className="p-3 md:p-4 flex flex-col flex-grow">
-                  <h3 className="font-playfair text-sm md:text-base text-gray-800 mb-1 leading-tight line-clamp-2">
-                    {regalo.nombre}
-                  </h3>
-                  
-                  {regalo.tienda && (
-                    <p className="text-[10px] md:text-xs text-gray-400 italic mb-2">
-                      {regalo.tienda}
-                    </p>
-                  )}
-
-                  <div className="mt-auto flex flex-col gap-2 w-full mt-3">
-                    <Link href={`/babyshower/wishlist/${regalo.id}`} className="w-full">
-                      <motion.button 
-                        whileTap={{ scale: 0.95 }}
-                        className="w-full py-2 md:py-2.5 rounded-full bg-[#b56a7f] text-white font-playfair text-[10px] md:text-xs tracking-wider uppercase transition-opacity hover:opacity-90"
-                      >
-                        Ver Detalles
-                      </motion.button>
-                    </Link>
-
-                    {/* Lógica de Botón Secundario según Disponibilidad */}
-                    {regalo.es_reservable && (
-                      <>
-                        {regalo.reservado ? (
-                          <button 
-                            disabled
-                            className="w-full py-2 md:py-2.5 rounded-full bg-[#b56a7f] text-white font-playfair text-[10px] md:text-xs tracking-wider uppercase cursor-not-allowed"
-                          >
-                            RESERVADO
-                          </button>
-                        ) : (
-                          <motion.button 
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => setSelectedRegalo(regalo)}
-                            className="w-full py-2 md:py-2.5 rounded-full bg-transparent border border-[#b56a7f] text-[#b56a7f] font-playfair text-[10px] md:text-xs tracking-wider uppercase hover:bg-[#FFE6E7] transition-colors"
-                          >
-                            RESERVAR
-                          </motion.button>
-                        )}
-                      </>
-                    )}
+      {/* Layout de Regalos: Skeleton durante carga, o Masonry con animación en cascada */}
+      {isLoading ? (
+        <div className="flex w-full gap-3 md:gap-4 items-start">
+          {skeletonColumns.map((col, colIndex) => (
+            <div key={colIndex} className="flex flex-col gap-3 md:gap-4 flex-1">
+              {col.map((idx) => (
+                <div 
+                  key={idx}
+                  className="w-full bg-white border border-pink-100 rounded-2xl overflow-hidden shadow-sm animate-pulse flex flex-col"
+                >
+                  <div className="h-56 bg-pink-50/50 rounded-t-2xl w-full" />
+                  <div className="p-3 md:p-4 flex flex-col flex-grow items-center">
+                    <div className="h-6 bg-gray-200 rounded w-3/4 mx-auto mt-4" />
+                    <div className="h-10 bg-gray-200 rounded-full w-1/2 mx-auto mt-4 mb-6" />
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="flex w-full gap-3 md:gap-4 items-start">
+          {masonryColumns.map((col, colIndex) => (
+            <motion.div 
+              key={colIndex} 
+              variants={containerVariants}
+              initial={isFirstLoad ? "hidden" : false}
+              animate="show"
+              className="flex flex-col gap-3 md:gap-4 flex-1"
+            >
+              {col.map((regalo) => (
+                <motion.div 
+                  key={regalo.id} 
+                  variants={itemVariants}
+                  initial={isFirstLoad ? "hidden" : false}
+                  animate="show"
+                  id={regalo.id === firstReservableId ? 'tour-reservable-item' : regalo.id === firstInfiniteId ? 'tour-infinite-item' : undefined}
+                  className={`w-full bg-white border border-pink-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col ${
+                    regalo.es_reservable && regalo.reservado ? 'opacity-60 grayscale-[0.5]' : ''
+                  }`}
+                >
+                  {/* Imagen con Placeholder para evitar saltos de tamaño */}
+                  {regalo.imagen_url ? (
+                    <div className="relative w-full min-h-[180px] sm:min-h-[220px] bg-pink-50/40 overflow-hidden rounded-t-2xl flex items-center justify-center">
+                      <Gift className="w-10 h-10 text-pink-200/50 absolute pointer-events-none" strokeWidth={1} />
+                      <img 
+                        src={regalo.imagen_url} 
+                        alt={regalo.nombre} 
+                        className="relative z-10 w-full h-auto object-contain block"
+                        loading="eager"
+                      />
+                    </div>
+                  ) : (
+                    <div className="bg-pink-50/50 min-h-[180px] sm:min-h-[220px] flex items-center justify-center rounded-t-2xl">
+                      <Gift className="w-12 h-12 text-gray-300" strokeWidth={1} />
+                    </div>
+                  )}
+
+                  {/* Contenido de la Tarjeta */}
+                  <div className="p-3 md:p-4 flex flex-col flex-grow">
+                    <h3 className="font-playfair text-sm md:text-base text-gray-800 mb-1 leading-tight line-clamp-2">
+                      {regalo.nombre}
+                    </h3>
+                    
+                    {regalo.tienda && (
+                      <p className="text-[10px] md:text-xs text-gray-400 italic mb-2">
+                        {regalo.tienda}
+                      </p>
+                    )}
+
+                    <div className="mt-auto flex flex-col gap-2 w-full mt-3">
+                      <Link href={`/babyshower/wishlist/${regalo.id}`} className="w-full">
+                        <motion.button 
+                          whileTap={{ scale: 0.95 }}
+                          className="w-full py-2 md:py-2.5 rounded-full bg-[#b56a7f] text-white font-playfair text-[10px] md:text-xs tracking-wider uppercase transition-opacity hover:opacity-90"
+                        >
+                          Ver Detalles
+                        </motion.button>
+                      </Link>
+
+                      {/* Lógica de Botón Secundario según Disponibilidad */}
+                      {regalo.es_reservable && (
+                        <>
+                          {regalo.reservado ? (
+                            <button 
+                              disabled
+                              className="w-full py-2 md:py-2.5 rounded-full bg-[#b56a7f] text-white font-playfair text-[10px] md:text-xs tracking-wider uppercase cursor-not-allowed"
+                            >
+                              RESERVADO
+                            </button>
+                          ) : (
+                            <motion.button 
+                              whileTap={{ scale: 0.95 }}
+                              onClick={() => setSelectedRegalo(regalo)}
+                              className="w-full py-2 md:py-2.5 rounded-full bg-transparent border border-[#b56a7f] text-[#b56a7f] font-playfair text-[10px] md:text-xs tracking-wider uppercase hover:bg-[#FFE6E7] transition-colors"
+                            >
+                              RESERVAR
+                            </motion.button>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          ))}
+        </div>
+      )}
 
       {/* Modal / Bottom Sheet de Reserva */}
       <AnimatePresence>
