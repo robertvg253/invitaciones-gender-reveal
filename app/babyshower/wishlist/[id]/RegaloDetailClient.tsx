@@ -103,9 +103,10 @@ export default function RegaloDetailClient({ initialRegalo }: Props) {
               href={regalo.enlace}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full py-4 rounded-full bg-transparent border border-gray-300 text-gray-600 font-playfair text-xs tracking-wider uppercase text-center hover:bg-gray-100 transition-colors"
+              className="w-full py-4 rounded-full bg-transparent border border-gray-300 text-gray-600 font-playfair text-xs tracking-wider uppercase text-center hover:bg-gray-100 transition-colors flex items-center justify-center gap-1.5"
             >
-              Ver Referencia ↗
+              <span>Ver Referencia en Tienda</span>
+              <span className="text-sm">↗</span>
             </a>
           )}
 
