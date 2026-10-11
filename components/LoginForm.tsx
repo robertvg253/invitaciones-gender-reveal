@@ -120,13 +120,13 @@ export default function LoginForm({ onLoginSuccess }: LoginFormProps) {
       ) : (
         <form onSubmit={handleVerifyOtp} className="space-y-6">
           <div>
-            <label htmlFor="otp" className="block font-playfair text-sm text-gray-600 mb-4 text-center">
+            <label htmlFor="code" className="block font-playfair text-sm text-gray-600 mb-4 text-center">
               Ingresa el código que enviamos a<br/>
               <span className="font-sans text-[#C5B39A] mt-1 block">{email}</span>
             </label>
             <input
-              id="otp"
-              name="otp"
+              id="code"
+              name="code"
               type="text"
               inputMode="numeric"
               autoComplete="one-time-code"
