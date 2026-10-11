@@ -110,7 +110,7 @@ export default async function InvitationPage({
             URB NUEVA SEGOVIA
           </p>
           <a
-            href="https://maps.app.goo.gl/i4nSbwDEumFjER7NA"
+            href="https://www.google.com/maps/search/?api=1&query=10.0639417,-69.2948981"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[#D3AD7A] text-[9px] tracking-[0.2em] uppercase transition-colors hover:text-gray-600 border-b border-[#D3AD7A] pb-[1px]"

@@ -218,7 +218,7 @@ export default function InvitationDetails({ guestData }: InvitationDetailsProps)
             Detrás del C.C. París
           </p>
           <a
-            href="https://maps.app.goo.gl/RU5fjey12QPC9MF59"
+            href="https://www.google.com/maps/search/?api=1&query=10.068005,-69.2869704"
             target="_blank"
             rel="noopener noreferrer"
             className="border-b border-[#EB9EAB] text-[#EB9EAB] pb-1 font-playfair text-[10px] tracking-widest uppercase transition-colors hover:text-[#6B4E41] hover:border-[#6B4E41]"
