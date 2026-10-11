@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   title: "Baby Shower de Avril",
   description: "Emilia & Robert te invitan a celebrar el baby shower de nuestra bebé",
   icons: {
-    icon: "/lazos-dresscode/great - 10.png",
+    icon: "/lazos-dresscode/great - 11.png",
   },
 };
 
