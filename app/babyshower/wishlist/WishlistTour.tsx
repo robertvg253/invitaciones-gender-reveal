@@ -9,21 +9,36 @@ export default function WishlistTour() {
 
   useEffect(() => {
     setIsClient(true);
-    // Verificamos si ya vio el popup
-    const hasSeenPopup = document.cookie.includes('wishlistPopupSeen=true');
-    
-    if (!hasSeenPopup) {
-      // Mostrar el popup 3 segundos después de cargar la página
+
+    // Eliminamos la cookie de 1 año antigua para no bloquear a nadie que la haya cerrado antes
+    if (typeof document !== 'undefined' && document.cookie.includes('wishlistPopupSeen=')) {
+      document.cookie = "wishlistPopupSeen=; path=/; max-age=0";
+    }
+
+    // Verificamos si en la sesión actual ya cerró el popup
+    const hasSeenInSession = typeof window !== 'undefined' && sessionStorage.getItem('wishlist_popup_seen') === 'true';
+
+    if (!hasSeenInSession) {
+      // Mostrar el popup con una pequeña espera suave (800ms) al entrar
       const timer = setTimeout(() => {
         setShowPopup(true);
-      }, 3000);
+      }, 800);
       return () => clearTimeout(timer);
     }
   }, []);
 
+  // Escuchar evento para reabrir el popup si el usuario hace clic en "¿Cómo funciona?"
+  useEffect(() => {
+    const handleOpen = () => setShowPopup(true);
+    window.addEventListener('open-wishlist-tour', handleOpen);
+    return () => window.removeEventListener('open-wishlist-tour', handleOpen);
+  }, []);
+
   const handleClose = () => {
-    // Guardar la cookie para que no vuelva a aparecer (expira en 1 año)
-    document.cookie = "wishlistPopupSeen=true; path=/; max-age=31536000";
+    // Marcar en la sesión actual para no molestar continuamente mientras navega entre productos
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('wishlist_popup_seen', 'true');
+    }
     setShowPopup(false);
   };
 

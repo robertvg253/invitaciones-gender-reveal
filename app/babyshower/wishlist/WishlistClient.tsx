@@ -35,19 +35,20 @@ const itemVariants: Variants = {
   show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
 };
 
-export default function WishlistClient({ initialRegalos }: { initialRegalos: Regalo[] }) {
+export default function WishlistClient({ 
+  initialRegalos,
+  initialHasLoaded = false,
+}: { 
+  initialRegalos: Regalo[];
+  initialHasLoaded?: boolean;
+}) {
   const [regalos, setRegalos] = useState<Regalo[]>(initialRegalos);
   const [selectedRegalo, setSelectedRegalo] = useState<Regalo | null>(null);
   const [isReserving, setIsReserving] = useState(false);
-  const [isFirstLoad] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return !sessionStorage.getItem('wishlist_loaded');
-    }
-    return true; // Por defecto true en el servidor
-  });
-
-  // Usaremos isFirstLoad para controlar el skeleton
-  const [isLoading, setIsLoading] = useState(isFirstLoad);
+  
+  // Total sincronización entre Servidor y Cliente para evitar Hydration Mismatch
+  const [isFirstLoad] = useState(!initialHasLoaded);
+  const [isLoading, setIsLoading] = useState(!initialHasLoaded);
   const router = useRouter();
 
   // Pre-carga real de imágenes enlazada directamente al tiempo de vida del Skeleton
@@ -81,11 +82,20 @@ export default function WishlistClient({ initialRegalos }: { initialRegalos: Reg
     // Mínimo de 600ms para evitar parpadeo si cargan en milisegundos
     const minDelayPromise = new Promise((resolve) => setTimeout(resolve, 600));
 
+    const markLoaded = () => {
+      if (typeof document !== 'undefined') {
+        document.cookie = "wishlist_loaded=true; path=/;";
+      }
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('wishlist_loaded', 'true');
+      }
+    };
+
     // Timeout de seguridad máximo (3500ms) para que nunca se quede trabado en conexiones muy lentas
     const safetyTimer = setTimeout(() => {
       if (isMounted) {
         setIsLoading(false);
-        sessionStorage.setItem('wishlist_loaded', 'true');
+        markLoaded();
       }
     }, 3500);
 
@@ -94,7 +104,7 @@ export default function WishlistClient({ initialRegalos }: { initialRegalos: Reg
       if (isMounted) {
         clearTimeout(safetyTimer);
         setIsLoading(false);
-        sessionStorage.setItem('wishlist_loaded', 'true');
+        markLoaded();
       }
     });
 
@@ -221,10 +231,16 @@ export default function WishlistClient({ initialRegalos }: { initialRegalos: Reg
       </div>
 
       {/* Banner Recordatorio */}
-      <div className="bg-pink-50 border border-pink-100 rounded-xl p-5 mb-10 max-w-2xl mx-auto shadow-sm">
+      <div className="bg-pink-50 border border-pink-100 rounded-xl p-5 mb-10 max-w-2xl mx-auto shadow-sm flex flex-col items-center gap-2">
         <p className="text-center text-[13px] md:text-sm text-gray-600 font-playfair italic leading-relaxed">
           Por favor, recuerda identificar tu obsequio físico con una tarjetita para saber de quién viene este hermoso detalle. 💕
         </p>
+        <button
+          onClick={() => window.dispatchEvent(new CustomEvent('open-wishlist-tour'))}
+          className="text-[11px] md:text-xs text-[#b56a7f] hover:text-[#91465b] font-playfair uppercase tracking-wider underline underline-offset-4 font-semibold transition-colors mt-1"
+        >
+          ¿Cómo funciona la mesa de regalos? ✨
+        </button>
       </div>
 
       {/* Layout de Regalos: Skeleton durante carga, o Masonry con animación en cascada */}

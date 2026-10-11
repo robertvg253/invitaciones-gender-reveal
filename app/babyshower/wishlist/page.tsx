@@ -1,9 +1,13 @@
+import { cookies } from 'next/headers';
 import { supabase } from '../../../lib/supabase';
 import WishlistClient from './WishlistClient';
 
 export const dynamic = 'force-dynamic';
 
 export default async function WishlistPage() {
+  const cookieStore = await cookies();
+  const hasLoadedBefore = cookieStore.has('wishlist_loaded');
+
   const { data: regalos, error } = await supabase
     .from('regalos_babyshower')
     .select('*')
@@ -15,7 +19,10 @@ export default async function WishlistPage() {
 
   return (
     <main className="min-h-screen bg-[#FAFAFA] font-sans">
-      <WishlistClient initialRegalos={regalos || []} />
+      <WishlistClient 
+        initialRegalos={regalos || []} 
+        initialHasLoaded={hasLoadedBefore}
+      />
     </main>
   );
 }
