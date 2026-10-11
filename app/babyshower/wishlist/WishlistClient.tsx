@@ -35,17 +35,17 @@ const itemVariants: Variants = {
   show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
 };
 
-export default function WishlistClient({ 
+export default function WishlistClient({
   initialRegalos,
   initialHasLoaded = false,
-}: { 
+}: {
   initialRegalos: Regalo[];
   initialHasLoaded?: boolean;
 }) {
   const [regalos, setRegalos] = useState<Regalo[]>(initialRegalos);
   const [selectedRegalo, setSelectedRegalo] = useState<Regalo | null>(null);
   const [isReserving, setIsReserving] = useState(false);
-  
+
   // Total sincronización entre Servidor y Cliente para evitar Hydration Mismatch
   const [isFirstLoad] = useState(!initialHasLoaded);
   const [isLoading, setIsLoading] = useState(!initialHasLoaded);
@@ -149,7 +149,7 @@ export default function WishlistClient({
       if (error) throw error;
 
       // Actualizar estado local
-      setRegalos((prev) => 
+      setRegalos((prev) =>
         prev.map((r) => r.id === selectedRegalo.id ? { ...r, reservado: true } : r)
       );
       setSelectedRegalo(null);
@@ -169,7 +169,7 @@ export default function WishlistClient({
       else if (window.innerWidth >= 768) setColumnsCount(3);
       else setColumnsCount(2);
     };
-    
+
     updateColumns();
     window.addEventListener('resize', updateColumns);
     return () => window.removeEventListener('resize', updateColumns);
@@ -201,7 +201,7 @@ export default function WishlistClient({
 
   return (
     <div className="w-full max-w-5xl mx-auto px-4 py-8 md:py-16">
-      
+
       {/* Componente de Onboarding Tour */}
       <WishlistTour />
 
@@ -225,7 +225,7 @@ export default function WishlistClient({
           Mesa de Regalos
         </h1>
         <p className="font-playfair text-xs md:text-sm text-gray-600 max-w-lg mx-auto leading-relaxed px-2 mb-8">
-          Si deseas tener un detalle con Avril, hemos preparado esta lista de sugerencias. 
+          Si deseas tener un detalle con Avril, hemos preparado esta lista de sugerencias.
           Puedes reservar un regalo para asegurar que no se repita.
         </p>
       </div>
@@ -233,7 +233,7 @@ export default function WishlistClient({
       {/* Banner Recordatorio */}
       <div className="bg-pink-50 border border-pink-100 rounded-xl p-5 mb-10 max-w-2xl mx-auto shadow-sm flex flex-col items-center gap-2">
         <p className="text-center text-[13px] md:text-sm text-gray-600 font-playfair italic leading-relaxed">
-          Por favor, recuerda identificar tu obsequio físico con una tarjetita para saber de quién viene este hermoso detalle. 💕
+          Por favor, recuerda identificar tu obsequio físico con una tarjetita para saber de quién viene este hermoso detalle.
         </p>
         <button
           onClick={() => window.dispatchEvent(new CustomEvent('open-wishlist-tour'))}
@@ -249,7 +249,7 @@ export default function WishlistClient({
           {skeletonColumns.map((col, colIndex) => (
             <div key={colIndex} className="flex flex-col gap-3 md:gap-4 flex-1">
               {col.map((idx) => (
-                <div 
+                <div
                   key={idx}
                   className="w-full bg-white border border-pink-100 rounded-2xl overflow-hidden shadow-sm animate-pulse flex flex-col"
                 >
@@ -266,31 +266,30 @@ export default function WishlistClient({
       ) : (
         <div className="flex w-full gap-3 md:gap-4 items-start">
           {masonryColumns.map((col, colIndex) => (
-            <motion.div 
-              key={colIndex} 
+            <motion.div
+              key={colIndex}
               variants={containerVariants}
               initial={isFirstLoad ? "hidden" : false}
               animate="show"
               className="flex flex-col gap-3 md:gap-4 flex-1"
             >
               {col.map((regalo) => (
-                <motion.div 
-                  key={regalo.id} 
+                <motion.div
+                  key={regalo.id}
                   variants={itemVariants}
                   initial={isFirstLoad ? "hidden" : false}
                   animate="show"
                   id={regalo.id === firstReservableId ? 'tour-reservable-item' : regalo.id === firstInfiniteId ? 'tour-infinite-item' : undefined}
-                  className={`w-full bg-white border border-pink-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col ${
-                    regalo.es_reservable && regalo.reservado ? 'opacity-60 grayscale-[0.5]' : ''
-                  }`}
+                  className={`w-full bg-white border border-pink-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col ${regalo.es_reservable && regalo.reservado ? 'opacity-60 grayscale-[0.5]' : ''
+                    }`}
                 >
                   {/* Imagen con Placeholder para evitar saltos de tamaño */}
                   {regalo.imagen_url ? (
                     <div className="relative w-full min-h-[180px] sm:min-h-[220px] bg-pink-50/40 overflow-hidden rounded-t-2xl flex items-center justify-center">
                       <Gift className="w-10 h-10 text-pink-200/50 absolute pointer-events-none" strokeWidth={1} />
-                      <img 
-                        src={regalo.imagen_url} 
-                        alt={regalo.nombre} 
+                      <img
+                        src={regalo.imagen_url}
+                        alt={regalo.nombre}
                         className="relative z-10 w-full h-auto object-contain block"
                         loading="eager"
                       />
@@ -306,7 +305,7 @@ export default function WishlistClient({
                     <h3 className="font-playfair text-sm md:text-base text-gray-800 mb-1 leading-tight line-clamp-2">
                       {regalo.nombre}
                     </h3>
-                    
+
                     {regalo.tienda && (
                       <p className="text-[10px] md:text-xs text-gray-400 italic mb-2">
                         {regalo.tienda}
@@ -315,7 +314,7 @@ export default function WishlistClient({
 
                     <div className="mt-auto flex flex-col gap-2 w-full mt-3">
                       <Link href={`/babyshower/wishlist/${regalo.id}`} className="w-full">
-                        <motion.button 
+                        <motion.button
                           whileTap={{ scale: 0.95 }}
                           className="w-full py-2 md:py-2.5 rounded-full bg-[#b56a7f] text-white font-playfair text-[10px] md:text-xs tracking-wider uppercase transition-opacity hover:opacity-90"
                         >
@@ -327,14 +326,14 @@ export default function WishlistClient({
                       {regalo.es_reservable && (
                         <>
                           {regalo.reservado ? (
-                            <button 
+                            <button
                               disabled
                               className="w-full py-2 md:py-2.5 rounded-full bg-[#b56a7f] text-white font-playfair text-[10px] md:text-xs tracking-wider uppercase cursor-not-allowed"
                             >
                               RESERVADO
                             </button>
                           ) : (
-                            <motion.button 
+                            <motion.button
                               whileTap={{ scale: 0.95 }}
                               onClick={() => setSelectedRegalo(regalo)}
                               className="w-full py-2 md:py-2.5 rounded-full bg-transparent border border-[#b56a7f] text-[#b56a7f] font-playfair text-[10px] md:text-xs tracking-wider uppercase hover:bg-[#FFE6E7] transition-colors"
@@ -358,16 +357,16 @@ export default function WishlistClient({
         {selectedRegalo && (
           <>
             {/* Fondo oscuro (Backdrop) */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => !isReserving && setSelectedRegalo(null)}
               className="fixed inset-0 bg-black/40 z-40 backdrop-blur-sm"
             />
-            
+
             {/* Modal Bottom Sheet */}
-            <motion.div 
+            <motion.div
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
@@ -375,7 +374,7 @@ export default function WishlistClient({
               className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-3xl shadow-2xl p-6 md:p-8 max-w-lg mx-auto"
             >
               <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6" />
-              
+
               <div className="flex items-center gap-4 mb-6 bg-gray-50 p-4 rounded-xl border border-gray-100">
                 <div className="relative w-20 h-20 shrink-0 bg-white rounded-md border border-gray-100 p-2">
                   {selectedRegalo.imagen_url ? (
@@ -395,7 +394,7 @@ export default function WishlistClient({
               </p>
 
               <div className="flex flex-col gap-3">
-                <motion.button 
+                <motion.button
                   whileTap={{ scale: isReserving ? 1 : 0.95 }}
                   disabled={isReserving}
                   onClick={handleReserve}
@@ -410,7 +409,7 @@ export default function WishlistClient({
                     "Sí, Reservar Regalo"
                   )}
                 </motion.button>
-                <button 
+                <button
                   disabled={isReserving}
                   onClick={() => setSelectedRegalo(null)}
                   className="w-full py-4 rounded-full bg-transparent text-gray-500 font-playfair text-xs tracking-widest uppercase hover:bg-gray-50 transition-colors"

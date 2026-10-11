@@ -66,29 +66,29 @@ export default function WishlistTour() {
             transition={{ duration: 0.4, ease: "easeOut" }}
             className="bg-[#F9F8F6] p-8 rounded-3xl shadow-2xl max-w-md w-full relative text-center border border-[#e5e5e5] z-10"
           >
-            <button 
+            <button
               onClick={handleClose}
               className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 text-gray-600 hover:bg-[#b56a7f] hover:text-white transition-colors"
             >
               ✕
             </button>
-            
+
             <h2 className="font-['Playfair_Display'] text-2xl mb-4 text-[#b56a7f] font-bold">
               ¿Cómo funciona la Mesa de Regalos?
             </h2>
-            
+
             <div className="text-left text-[#4a4a4a] text-sm space-y-4 mb-8">
               <p>
-                <strong className="text-[#b56a7f]">✨ Regalos Únicos:</strong><br/>
-                Al marcar un artículo como reservado, nos aseguras que Avril no reciba el mismo detalle dos veces. 
+                <strong className="text-[#b56a7f]">Regalos Únicos:</strong><br />
+                Al marcar un artículo como reservado, nos aseguras que Avril no reciba el mismo detalle dos veces.
               </p>
               <p>
-                <strong className="text-[#b56a7f]">🔒 Reserva Anónima:</strong><br/>
+                <strong className="text-[#b56a7f]">Reserva Anónima:</strong><br />
                 Tu reserva es secreta en la lista, pero bloquea el artículo para que sea tu regalo exclusivo.
               </p>
               <p>
-                <strong className="text-[#b56a7f]">🎁 Detalles Infinitos:</strong><br/>
-                Cualquier otro detalle nacido de tu corazón es bienvenido. ¡Por favor ponle una tarjetita a tu regalo físico para poder agradecerte! 💕
+                <strong className="text-[#b56a7f]">Detalles Infinitos:</strong><br />
+                Cualquier otro detalle que nazca de tu corazón es bienvenido. ¡Por favor ponle una tarjetita a tu regalo físico para poder agradecerte!
               </p>
             </div>
 

@@ -330,7 +330,7 @@ export default function InvitationDetails({ guestData }: InvitationDetailsProps)
             Confirma tu asistencia
           </p>
           <p className="font-playfair text-xs tracking-wider text-gray-600 mb-8 max-w-[280px] leading-relaxed">
-            Por favor, haznos saber si nos acompañarás antes del 10 de Octubre.
+            Por favor, haznos saber si contaremos con tu presencia.
           </p>
           <motion.button
             whileTap={{ scale: isConfirmed || isLoading ? 1 : 0.95 }}
