@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { useRouter } from 'next/navigation';
@@ -280,25 +279,37 @@ export default function WishlistClient({
                   initial={isFirstLoad ? "hidden" : false}
                   animate="show"
                   id={regalo.id === firstReservableId ? 'tour-reservable-item' : regalo.id === firstInfiniteId ? 'tour-infinite-item' : undefined}
-                  className={`w-full bg-white border border-pink-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col ${regalo.es_reservable && regalo.reservado ? 'opacity-60 grayscale-[0.5]' : ''
-                    }`}
+                  className="w-full bg-white border border-pink-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col"
                 >
-                  {/* Imagen con Placeholder para evitar saltos de tamaño */}
-                  {regalo.imagen_url ? (
-                    <div className="relative w-full min-h-[180px] sm:min-h-[220px] bg-pink-50/40 overflow-hidden rounded-t-2xl flex items-center justify-center">
-                      <Gift className="w-10 h-10 text-pink-200/50 absolute pointer-events-none" strokeWidth={1} />
-                      <img
-                        src={regalo.imagen_url}
-                        alt={regalo.nombre}
-                        className="relative z-10 w-full h-auto object-contain block"
-                        loading="eager"
-                      />
-                    </div>
-                  ) : (
-                    <div className="bg-pink-50/50 min-h-[180px] sm:min-h-[220px] flex items-center justify-center rounded-t-2xl">
-                      <Gift className="w-12 h-12 text-gray-300" strokeWidth={1} />
-                    </div>
-                  )}
+                  {/* Imagen con Placeholder y Badge */}
+                  <div className="relative w-full">
+                    {regalo.imagen_url ? (
+                      <div className={`relative w-full min-h-[180px] sm:min-h-[220px] bg-pink-50/40 overflow-hidden rounded-t-2xl flex items-center justify-center transition-all ${
+                        regalo.es_reservable && regalo.reservado ? 'opacity-70 grayscale-[0.25]' : ''
+                      }`}>
+                        <Gift className="w-10 h-10 text-pink-200/50 absolute pointer-events-none" strokeWidth={1} />
+                        <img
+                          src={regalo.imagen_url}
+                          alt={regalo.nombre}
+                          className="relative z-10 w-full h-auto object-contain block"
+                          loading="eager"
+                        />
+                      </div>
+                    ) : (
+                      <div className={`bg-pink-50/50 min-h-[180px] sm:min-h-[220px] flex items-center justify-center rounded-t-2xl ${
+                        regalo.es_reservable && regalo.reservado ? 'opacity-70' : ''
+                      }`}>
+                        <Gift className="w-12 h-12 text-gray-300" strokeWidth={1} />
+                      </div>
+                    )}
+
+                    {/* Badge RESERVADO encima de la imagen */}
+                    {regalo.es_reservable && regalo.reservado && (
+                      <div className="absolute top-2.5 right-2.5 z-20 bg-[#b56a7f] text-white text-[9px] md:text-[10px] font-sans font-bold tracking-wider px-2.5 py-1 rounded-full shadow-md uppercase border border-white/50 backdrop-blur-xs">
+                        RESERVADO
+                      </div>
+                    )}
+                  </div>
 
                   {/* Contenido de la Tarjeta */}
                   <div className="p-3 md:p-4 flex flex-col flex-grow">
@@ -376,9 +387,9 @@ export default function WishlistClient({
               <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6" />
 
               <div className="flex items-center gap-4 mb-6 bg-gray-50 p-4 rounded-xl border border-gray-100">
-                <div className="relative w-20 h-20 shrink-0 bg-white rounded-md border border-gray-100 p-2">
+                <div className="relative w-20 h-20 shrink-0 bg-white rounded-md border border-gray-100 p-2 flex items-center justify-center">
                   {selectedRegalo.imagen_url ? (
-                    <Image src={selectedRegalo.imagen_url} alt={selectedRegalo.nombre} fill className="object-contain" />
+                    <img src={selectedRegalo.imagen_url} alt={selectedRegalo.nombre} className="w-full h-full object-contain" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-2xl">🎁</div>
                   )}

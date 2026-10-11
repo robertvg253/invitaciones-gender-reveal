@@ -61,6 +61,13 @@ export default function RegaloDetailClient({ initialRegalo }: Props) {
             <Gift className="w-20 h-20 text-gray-300" strokeWidth={1} />
           </div>
         )}
+
+        {/* Badge RESERVADO encima de la imagen */}
+        {regalo.es_reservable && regalo.reservado && (
+          <div className="absolute top-6 right-4 z-40 bg-[#b56a7f] text-white text-[10px] md:text-xs font-sans font-bold tracking-widest px-3.5 py-1.5 rounded-full shadow-lg uppercase border border-white/60 backdrop-blur-xs">
+            RESERVADO
+          </div>
+        )}
       </div>
 
       {/* Contenido Principal */}

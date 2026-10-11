@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../lib/supabase';
@@ -43,11 +43,21 @@ const bowVariant = {
 
 // Componente Wrapper para estandarizar las secciones separadas
 // Ahora con initial/whileInView propio para que animen al hacer scroll
-const MotionSection = ({ children, className = "", delay = 0 }: { children: React.ReactNode, className?: string, delay?: number }) => (
+const MotionSection = ({ 
+  children, 
+  className = "", 
+  delay = 0,
+  viewport = { once: true, amount: 0.3 }
+}: { 
+  children: React.ReactNode; 
+  className?: string; 
+  delay?: number;
+  viewport?: any;
+}) => (
   <motion.div
     initial="hidden"
     whileInView="visible"
-    viewport={{ once: true, amount: 0.3 }}
+    viewport={viewport}
     variants={{
       hidden: { opacity: 0, y: 50 },
       visible: {
@@ -65,7 +75,18 @@ const MotionSection = ({ children, className = "", delay = 0 }: { children: Reac
 export default function InvitationDetails({ guestData }: InvitationDetailsProps) {
   const [isConfirmed, setIsConfirmed] = useState(guestData.estado_confirmacion || false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAtBottom, setIsAtBottom] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const bottom = Math.ceil(window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 50;
+      setIsAtBottom(bottom);
+    };
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleConfirm = async () => {
     if (!guestData.slug) return;
@@ -86,7 +107,7 @@ export default function InvitationDetails({ guestData }: InvitationDetailsProps)
   };
 
   return (
-    <section className="relative w-full py-32 px-4 flex flex-col items-center bg-white overflow-x-hidden">
+    <section className="relative w-full pt-32 pb-20 px-4 flex flex-col items-center bg-white overflow-x-hidden">
 
       {/* Fondo que se replica en toda la invitación */}
       <div
@@ -284,23 +305,6 @@ export default function InvitationDetails({ guestData }: InvitationDetailsProps)
 
         {/* Datos del Invitado (Dinámico) */}
         <MotionSection className="mt-32 relative z-10">
-
-          {/* Lazo gigante secundario de fondo */}
-          <motion.div
-            initial={{ opacity: 0, x: 50, rotate: 0 }}
-            whileInView={{ opacity: 0.6, x: 0, rotate: -15 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="absolute top-0 -right-60 md:-right-32 w-[480px] h-[480px] z-0 pointer-events-none"
-          >
-            <Image
-              src="/IMG_8672.PNG"
-              alt="Lazo secundario"
-              fill
-              className="object-contain object-bottom"
-            />
-          </motion.div>
-
           <div className="relative w-full max-w-[300px] border-t border-b border-gray-200 py-6 flex flex-col items-center">
             <p className="font-playfair text-[11px] tracking-[0.2em] text-gray-500 uppercase mb-3 relative z-10">
               Especialmente para:
@@ -323,66 +327,91 @@ export default function InvitationDetails({ guestData }: InvitationDetailsProps)
           </div>
         </MotionSection>
 
-        {/* RSVP */}
+        {/* Mesa de Regalos (Penúltima Sección) */}
         <MotionSection className="mt-32 relative z-10">
-          <h3 className="font-great-vibes text-7xl text-[#EB9EAB] mb-2" style={{ fontFamily: "'Great Vibes', cursive" }}>Rsvp</h3>
-          <p className="font-playfair text-xs tracking-[0.2em] uppercase text-gray-500 mb-4">
-            Confirma tu asistencia
-          </p>
-          <p className="font-playfair text-xs tracking-wider text-gray-600 mb-8 max-w-[280px] leading-relaxed">
-            Por favor, haznos saber si contaremos con tu presencia.
-          </p>
-          <motion.button
-            whileTap={{ scale: isConfirmed || isLoading ? 1 : 0.95 }}
-            disabled={isConfirmed || isLoading}
-            onClick={handleConfirm}
-            className={`w-[260px] py-3 flex justify-center items-center font-playfair text-sm tracking-widest uppercase rounded-full transition-colors duration-500 ease-in-out border ${isConfirmed
-              ? 'bg-[#b56a7f] text-white border-[#b56a7f]'
-              : 'bg-[#FFE6E7] text-[#6B4E41] border-[#FFE6E7] hover:bg-[#EB9EAB] hover:border-[#EB9EAB] hover:text-white'
-              }`}
-          >
-            {isLoading ? (
-              <svg className="animate-spin h-5 w-5 text-[#6B4E41]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-            ) : isConfirmed ? (
-              'CONFIRMADO ✓'
-            ) : (
-              'Confirmar Asistencia'
-            )}
-          </motion.button>
+          <div className="relative w-full flex flex-col items-center">
+            {/* Cajita de Regalo Decorativa anclada abajo a la izquierda */}
+            <motion.img
+              src="/IMG_8714.PNG"
+              alt="Regalo decorativo"
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 0.6, scale: 1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              viewport={{ once: true, amount: 0.2 }}
+              style={{ bottom: 'calc(var(--spacing) * -38)', left: '-35px' }}
+              className="absolute -z-10 w-90 opacity-60 pointer-events-none mix-blend-multiply"
+            />
+
+            <h3 className="font-great-vibes text-6xl text-[#6B4E41] mb-6" style={{ fontFamily: "'Great Vibes', cursive" }}>
+              Mesa de Regalos
+            </h3>
+            <p className="font-playfair text-xs tracking-wider text-gray-600 mb-8 max-w-[280px] leading-relaxed">
+              Si deseas tener un detalle con Avril, hemos preparado una pequeña lista de sugerencias que puedes ver aquí:
+            </p>
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={() => router.push('/babyshower/wishlist')}
+              className="bg-transparent border border-[#EB9EAB] text-[#EB9EAB] px-10 py-4 font-playfair text-sm md:text-base tracking-widest uppercase rounded-full transition-colors duration-300 hover:bg-[#dda7b8] hover:text-white hover:border-[#dda7b8] drop-shadow-sm"
+            >
+              Ver Lista de Regalos
+            </motion.button>
+          </div>
         </MotionSection>
 
-        {/* Mesa de Regalos */}
-        <MotionSection className="mt-32 mb-16 relative z-10">
-          <h3 className="font-great-vibes text-6xl text-[#6B4E41] mb-6" style={{ fontFamily: "'Great Vibes', cursive" }}>
-            Mesa de Regalos
-          </h3>
-          <p className="font-playfair text-xs tracking-wider text-gray-600 mb-8 max-w-[280px] leading-relaxed">
-            Si deseas tener un detalle con Avril, hemos preparado una pequeña lista de sugerencias que puedes ver aquí:
-          </p>
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={() => router.push('/babyshower/wishlist')}
-            className="bg-transparent border border-[#EB9EAB] text-[#EB9EAB] px-10 py-4 font-playfair text-sm md:text-base tracking-widest uppercase rounded-full transition-colors duration-300 hover:bg-[#dda7b8] hover:text-white hover:border-[#dda7b8] drop-shadow-sm"
-          >
-            Ver Lista de Regalos
-          </motion.button>
+        {/* RSVP (Última Sección con Trigger Adelantado) */}
+        <MotionSection
+          className="mt-32 relative z-10"
+          viewport={{ once: true, amount: 0, margin: "0px 0px -50px 0px" }}
+        >
+          <div className="relative w-full flex flex-col items-center">
+            <h3 className="font-great-vibes text-7xl text-[#EB9EAB] mb-2" style={{ fontFamily: "'Great Vibes', cursive" }}>Rsvp</h3>
+            <p className="font-playfair text-xs tracking-[0.2em] uppercase text-gray-500 mb-4">
+              Confirma tu asistencia
+            </p>
+            <p className="font-playfair text-xs tracking-wider text-gray-600 mb-8 max-w-[280px] leading-relaxed">
+              Por favor, haznos saber si contaremos con tu presencia.
+            </p>
+            <motion.button
+              whileTap={{ scale: isConfirmed || isLoading ? 1 : 0.95 }}
+              disabled={isConfirmed || isLoading}
+              onClick={handleConfirm}
+              className={`w-[260px] py-3 flex justify-center items-center font-playfair text-sm tracking-widest uppercase rounded-full transition-colors duration-500 ease-in-out border ${isConfirmed
+                ? 'bg-[#b56a7f] text-white border-[#b56a7f]'
+                : 'bg-[#FFE6E7] text-[#6B4E41] border-[#FFE6E7] hover:bg-[#EB9EAB] hover:border-[#EB9EAB] hover:text-white'
+                }`}
+            >
+              {isLoading ? (
+                <svg className="animate-spin h-5 w-5 text-[#6B4E41]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              ) : isConfirmed ? (
+                'CONFIRMADO ✓'
+              ) : (
+                'Confirmar Asistencia'
+              )}
+            </motion.button>
+          </div>
         </MotionSection>
 
       </div>
 
-      {/* Detalle decorativo de fondo: Cajita de regalo gigante pegada al borde inferior */}
-      <motion.img
-        src="/IMG_8714.PNG"
-        alt="Regalo decorativo"
-        initial={{ opacity: 0, x: -60 }}
-        whileInView={{ opacity: 0.85, x: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        viewport={{ once: true, amount: 0.2 }}
-        className="absolute bottom-0 -left-10 md:left-0 z-0 w-[520px] sm:w-[620px] md:w-[720px] opacity-85 pointer-events-none mix-blend-multiply"
-      />
+      {/* Indicador de Scroll Flotante ("Desliza") */}
+      <AnimatePresence>
+        {!isAtBottom && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-50 pointer-events-none"
+          >
+            <span className="font-playfair text-[10px] uppercase tracking-widest text-[#b56a7f]">desliza</span>
+            <svg className="w-4 h-4 text-[#b56a7f] animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
