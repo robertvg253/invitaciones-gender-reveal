@@ -140,7 +140,7 @@ export default function JuegoClient() {
   const answeredCount = answers.filter((a) => a.trim().length > 0).length;
 
   return (
-    <div className="min-h-screen bg-[#F9F8F6] text-gray-800 flex flex-col items-center pt-[max(env(safe-area-inset-top),2.5rem)] pb-16 px-4 sm:px-6 relative selection:bg-[#EB9EAB] selection:text-white">
+    <div className="min-h-screen bg-[#F9F8F6] text-gray-800 flex flex-col items-center pt-32 sm:pt-36 pb-16 px-4 sm:px-6 relative selection:bg-[#EB9EAB] selection:text-white">
       {/* Fondo con textura sutil en armonía con el baby shower */}
       <div
         className="fixed inset-0 z-0 opacity-[0.035] pointer-events-none"
@@ -151,66 +151,13 @@ export default function JuegoClient() {
         }}
       />
 
-      {/* Contenedor principal */}
-      <div className="w-full max-w-xl relative z-10 flex flex-col items-center">
-        
-        {/* Encabezado elegante */}
-        <div className="text-center mb-6 mt-2">
-          <p className="font-playfair text-[11px] tracking-[0.25em] uppercase text-[#6B4E41] font-semibold mb-1">
-            Baby Shower de Avril
-          </p>
-          <h1 className="font-great-vibes text-5xl sm:text-6xl text-[#6B4E41] mb-2" style={{ fontFamily: "'Great Vibes', cursive" }}>
-            Palabras Desordenadas
-          </h1>
-          <p className="font-playfair text-xs sm:text-sm text-gray-600 max-w-md mx-auto leading-relaxed">
-            Ordena las letras para descubrir las 12 palabras de bebé antes de que el tiempo se agote.
-          </p>
-        </div>
-
-        {/* Tarjeta de Inicio: Solo visible antes de jugar */}
-        {!isPlaying && !isFinished && (
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="w-full bg-white/95 backdrop-blur-xs border border-pink-100 rounded-3xl p-6 sm:p-8 shadow-sm text-center mb-6 flex flex-col items-center relative z-20"
-          >
-            <div className="w-16 h-16 rounded-full bg-[#FFE6E7] text-[#b56a7f] flex items-center justify-center mb-4 shadow-inner">
-              <Sparkles className="w-8 h-8" />
-            </div>
-            <h2 className="font-playfair text-lg sm:text-xl font-bold text-[#6B4E41] mb-2 tracking-wide">
-              ¿Listo para el desafío?
-            </h2>
-            <div className="text-xs text-gray-600 font-playfair space-y-2 mb-6 max-w-sm text-left bg-[#FDFBF9] p-4 rounded-2xl border border-gray-100">
-              <p className="flex items-center gap-2">
-                <span className="text-[#b56a7f] font-bold">⏱</span> Tienes <strong className="text-gray-800">60 segundos</strong> en el reloj.
-              </p>
-              <p className="flex items-center gap-2">
-                <span className="text-[#b56a7f] font-bold">⌨️</span> Presiona <strong className="text-gray-800">&quot;Siguiente&quot;</strong> en tu teclado para saltar al siguiente campo automáticamente.
-              </p>
-              <p className="flex items-center gap-2">
-                <span className="text-[#b56a7f] font-bold">🎯</span> Solo tienes <strong>una oportunidad</strong>. ¡Da lo mejor de ti!
-              </p>
-            </div>
-
-            <motion.button
-              whileTap={{ scale: 0.96 }}
-              whileHover={{ scale: 1.02 }}
-              onClick={handleStartGame}
-              className="w-full sm:w-auto px-10 py-4 bg-[#b56a7f] hover:bg-[#a0556b] text-white rounded-full font-playfair text-sm tracking-widest uppercase font-semibold shadow-md shadow-pink-900/10 transition-all flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <Play className="w-4 h-4 fill-current" />
-              <span>Comenzar Juego</span>
-            </motion.button>
-          </motion.div>
-        )}
-
-        {/* 
-          Barra flotante de Control:
-          Ajustada con top-[max(env(safe-area-inset-top),1.5rem)] y top-12
-          para garantizar compatibilidad total con Dynamic Island en iPhones nuevos
-        */}
-        {(isPlaying || isFinished) && (
-          <div className="sticky top-[max(env(safe-area-inset-top),1.5rem)] top-12 z-30 w-full mb-6 bg-white/95 backdrop-blur-md border border-pink-200/80 rounded-2xl p-3.5 shadow-md flex items-center justify-between gap-3 transition-all">
+      {/* 
+        Barra fija de Control (Temporizador tipo píldora flotante):
+        Contenedor padre transparente fixed con pointer-events-none y píldora con pointer-events-auto
+      */}
+      {(isPlaying || isFinished) && (
+        <header className="fixed top-0 left-0 w-full z-50 px-4 pt-[max(env(safe-area-inset-top),_1rem)] pointer-events-none flex justify-center">
+          <div className="w-full max-w-sm bg-white/95 backdrop-blur-sm shadow-md rounded-2xl border border-gray-100 px-5 py-3 flex items-center justify-between pointer-events-auto">
             {/* Temporizador */}
             <div className="flex items-center gap-2.5">
               <div
@@ -269,6 +216,60 @@ export default function JuegoClient() {
               )}
             </div>
           </div>
+        </header>
+      )}
+
+      {/* Contenedor principal */}
+      <div className="w-full max-w-xl relative z-10 flex flex-col items-center">
+        
+        {/* Encabezado elegante */}
+        <div className="text-center mb-6">
+          <p className="font-playfair text-[11px] tracking-[0.25em] uppercase text-[#6B4E41] font-semibold mb-1">
+            Baby Shower de Avril
+          </p>
+          <h1 className="font-great-vibes text-5xl sm:text-6xl text-[#6B4E41] mb-2" style={{ fontFamily: "'Great Vibes', cursive" }}>
+            Palabras Desordenadas
+          </h1>
+          <p className="font-playfair text-xs sm:text-sm text-gray-600 max-w-md mx-auto leading-relaxed">
+            Ordena las letras para descubrir las 12 palabras de bebé antes de que el tiempo se agote.
+          </p>
+        </div>
+
+        {/* Tarjeta de Inicio: Solo visible antes de jugar */}
+        {!isPlaying && !isFinished && (
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="w-full bg-white/95 backdrop-blur-xs border border-pink-100 rounded-3xl p-6 sm:p-8 shadow-sm text-center mb-6 flex flex-col items-center relative z-20"
+          >
+            <div className="w-16 h-16 rounded-full bg-[#FFE6E7] text-[#b56a7f] flex items-center justify-center mb-4 shadow-inner">
+              <Sparkles className="w-8 h-8" />
+            </div>
+            <h2 className="font-playfair text-lg sm:text-xl font-bold text-[#6B4E41] mb-2 tracking-wide">
+              ¿Listo para el desafío?
+            </h2>
+            <div className="text-xs text-gray-600 font-playfair space-y-2 mb-6 max-w-sm text-left bg-[#FDFBF9] p-4 rounded-2xl border border-gray-100">
+              <p className="flex items-center gap-2">
+                <span className="text-[#b56a7f] font-bold">⏱</span> Tienes <strong className="text-gray-800">60 segundos</strong> en el reloj.
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="text-[#b56a7f] font-bold">⌨️</span> Presiona <strong className="text-gray-800">&quot;Siguiente&quot;</strong> en tu teclado para saltar al siguiente campo automáticamente.
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="text-[#b56a7f] font-bold">🎯</span> Solo tienes <strong>una oportunidad</strong>. ¡Da lo mejor de ti!
+              </p>
+            </div>
+
+            <motion.button
+              whileTap={{ scale: 0.96 }}
+              whileHover={{ scale: 1.02 }}
+              onClick={handleStartGame}
+              className="w-full sm:w-auto px-10 py-4 bg-[#b56a7f] hover:bg-[#a0556b] text-white rounded-full font-playfair text-sm tracking-widest uppercase font-semibold shadow-md shadow-pink-900/10 transition-all flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <Play className="w-4 h-4 fill-current" />
+              <span>Comenzar Juego</span>
+            </motion.button>
+          </motion.div>
         )}
 
         {/* 
